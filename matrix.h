@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <malloc.h>
 
 struct Matrix{
 	uint8_t rowLen;

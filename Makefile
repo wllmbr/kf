@@ -9,7 +9,7 @@ OBJS = $(patsubst %.c, $(BLD)/%.o, $(LIBS))
 BLD = bld
 
 WARN = -Wall -Wno-unused-variable
-OPT = -O3
+OPT = -O3 -g
 LINK = -pthread
 
 

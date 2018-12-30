@@ -10,6 +10,7 @@ void initMat(struct Matrix *a, uint8_t numRow, uint8_t numCol){
 
 void delMat(struct Matrix *a){
 	free(a->mat);
+	return;
 }
 
 
@@ -19,8 +20,8 @@ double matElementAccess(struct Matrix *a, uint8_t row, uint8_t col){
 	index *= col;
 	index += row;
 	index *= sizeof(double);
-	// printf("Accessing Memory Index %ld\n", index);
-	fflush(stdout);
+	// printf("Accessing Memory Index %016llx\n", index);
+	// fflush(stdout);
 	double val = *(a->mat + index);
 	// printf("Retrieved val %f",val);
 	return val;
@@ -31,8 +32,8 @@ void matElementAssign(struct Matrix *a, uint8_t row, uint8_t col, double val){
 	index *= col;
 	index += row;
 	index *= sizeof(double);
-	// printf("Accessing Memory Index %d\n", index);
-	fflush(stdout);
+	// printf("Accessing Memory Index %016llx\n", index);
+	// fflush(stdout);
 	*(a->mat + index) = val;
 }
 
@@ -56,14 +57,14 @@ void invMat(struct Matrix *b, struct Matrix *a){
 
 double findDet(struct Matrix *a){
 
-	printf("Working with Matrix: \n");
-	printMat(a);
+	// printf("Working with Matrix: \n");
+	// printMat(a);
 
 
 	if(a->rowLen == 2){
 		/* Solve simple 2x2 solution */
 		double tbtd = ((matElementAccess(a,0,0)*matElementAccess(a,1,1)) - (matElementAccess(a,1,0)*matElementAccess(a,0,1)));
-		printf("Founrd 2x2 Det: %f\n", tbtd);
+		// printf("Founrd 2x2 Det: %f\n", tbtd);
 		return tbtd;
 	} else {
 		/* Recurvisevly hunt for 2x2 solutions */
@@ -106,9 +107,10 @@ double findDet(struct Matrix *a){
 			} else {
 				detAccumulator += subDet;
 			}
-
-
 		}
+
+		/* Delete "new" Matrix space */
+		delMat(&newMatrix);
 
 		return detAccumulator;
 	}
