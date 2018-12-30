@@ -12,6 +12,7 @@ struct Matrix{
 };
 
 void initMat(struct Matrix *a, uint8_t numRow, uint8_t numCol);
+void delMat(struct Matrix *a);
 
 double matElementAccess(struct Matrix *a, uint8_t row, uint8_t col);
 void matElementAssign(struct Matrix *a, uint8_t row, uint8_t col, double val);
@@ -21,10 +22,10 @@ void addMat(struct Matrix *c, struct Matrix *a, struct Matrix *b);
 void subMat(struct Matrix *c, struct Matrix *a, struct Matrix *b);
 void divMat(struct Matrix *c, struct Matrix *a, struct Matrix *b);
 
-void findDet(struct Matrix *a);
+double findDet(struct Matrix *a);
 
 void scalMult(double s, struct Matrix *a);
 
-void printMat(struct Matrix *c);
+void printMat(struct Matrix *a);
 
 #endif

@@ -8,7 +8,7 @@ LIBS = $(filter-out $(INIT), $(FILES))
 OBJS = $(patsubst %.c, $(BLD)/%.o, $(LIBS))
 BLD = bld
 
-WARN = -Wall
+WARN = -Wall -Wno-unused-variable
 OPT = -O3
 LINK = -pthread
 

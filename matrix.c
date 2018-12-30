@@ -8,6 +8,10 @@ void initMat(struct Matrix *a, uint8_t numRow, uint8_t numCol){
 	a->mat = (double *)malloc(sizeof(double) * numRow * numCol);
 }
 
+void delMat(struct Matrix *a){
+	free(a->mat);
+}
+
 
 double matElementAccess(struct Matrix *a, uint8_t row, uint8_t col){
 	// uint64_t index = (row + (col * a->rowLen)) * sizeof(double);
@@ -39,8 +43,6 @@ void mulMat(struct Matrix *c, struct Matrix *a, struct Matrix *b){
 		printf("Matrix Dimensions don't agree\n");
 		return;
 	}
-
-	for(col = 0; col < )
 }
 
 void addMat(struct Matrix *c, struct Matrix *a, struct Matrix *b);
@@ -54,38 +56,75 @@ void invMat(struct Matrix *b, struct Matrix *a){
 
 double findDet(struct Matrix *a){
 
-	double s = 1, det = 0, b[25][25];
-	int i, j, m, n, c;
-	if (k == 1)    {
-		return (a[0][0]);
+	printf("Working with Matrix: \n");
+	printMat(a);
+
+
+	if(a->rowLen == 2){
+		/* Solve simple 2x2 solution */
+		double tbtd = ((matElementAccess(a,0,0)*matElementAccess(a,1,1)) - (matElementAccess(a,1,0)*matElementAccess(a,0,1)));
+		printf("Founrd 2x2 Det: %f\n", tbtd);
+		return tbtd;
 	} else {
-		det = 0;
-		for (c = 0; c < k; c++){
-			m = 0;
-			n = 0;
-			for (i = 0;i < k; i++){
-				for (j = 0 ;j < k; j++){
-					b[i][j] = 0;
-					if (i != 0 && j != c){
-						b[m][n] = a[i][j];
-						if (n < (k - 2)){
-							n++;
-						} else {
-							n = 0;
-							m++;
-						}
+		/* Recurvisevly hunt for 2x2 solutions */
+		struct Matrix newMatrix;
+		initMat(&newMatrix,a->rowLen -1, a->colLen-1);
+
+		double detAccumulator = 0;
+		uint8_t i;
+		uint8_t colAdjust = 0;
+		for(i = 0; i < a->rowLen; i++){
+
+			/* If the scaler to be multiplied is 0, skip this step */
+			if(matElementAccess(a,0,i) == 0){
+				continue;
+			}
+
+			/* Construct new matrix */
+			uint8_t row, col;
+			for(row = 1; row < a->rowLen; row++){
+				colAdjust = 0;
+				for(col = 0; col < a->colLen; col++){
+					/* Make sure we're only copying the correct values */
+					if( col != i){
+						matElementAssign(&newMatrix, row - 1, col - colAdjust, matElementAccess(a,row,col));
+					} else {
+						colAdjust = 1;
 					}
 				}
 			}
-			det = det + s * (a[0][c] * determinant(b, k - 1));
-			s = -1 * s;
-		}
-	}
-	
-	return (det);
 
+			/* Find Determinant of new matrix */
+			double subDet = findDet(&newMatrix);
+
+			/* Create Det Component */
+			subDet *= matElementAccess(a,0,i);
+
+			/* Based upon index, determine if it needs to be added, or subtracted */
+			if((i & 1) != 0){
+				detAccumulator -= subDet;
+			} else {
+				detAccumulator += subDet;
+			}
+
+
+		}
+
+		return detAccumulator;
+	}
 }
 
-void scalMult(double s, struct Matrix *a);
 
-void printMat(struct Matrix *c);
+void scalMult(double s, struct Matrix *a){
+}
+
+void printMat(struct Matrix *a){
+	uint8_t r,c;
+	printf("\n");
+	for(r = 0; r < a->rowLen; r++){
+		for(c = 0; c < a->colLen; c++){
+			printf("%f\t",matElementAccess(a,r,c));
+		}
+		printf("\n");
+	}
+}
