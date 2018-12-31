@@ -19,7 +19,7 @@ double matElementAccess(struct Matrix *a, uint8_t row, uint8_t col){
 	uint64_t index = a->rowLen;
 	index *= col;
 	index += row;
-	index *= sizeof(double);
+	// index *= sizeof(double);
 	// printf("Accessing Memory Index %016llx\n", index);
 	// fflush(stdout);
 	double val = *(a->mat + index);
@@ -31,7 +31,7 @@ void matElementAssign(struct Matrix *a, uint8_t row, uint8_t col, double val){
 	uint64_t index = a->rowLen;
 	index *= col;
 	index += row;
-	index *= sizeof(double);
+	// index *= sizeof(double);
 	// printf("Accessing Memory Index %016llx\n", index);
 	// fflush(stdout);
 	*(a->mat + index) = val;
